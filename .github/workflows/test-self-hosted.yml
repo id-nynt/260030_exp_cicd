@@ -1,0 +1,21 @@
+name: Test self-hosted runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: [self-hosted, bdi-demo]
+
+    steps:
+      - name: Show environment
+        run: |
+          echo "Hello from my WSL runner"
+          uname -a
+          pwd
+          whoami
+
+      - name: Check Docker
+        run: |
+          docker --version
+          docker ps

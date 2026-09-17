@@ -1,0 +1,173 @@
+name: BDI entity execution
+
+run-name: BDI ${{ inputs.experiment_id }} / ${{ inputs.release_id }} / ${{ inputs.entity }} (${{ inputs.execution_id }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      entity:
+        description: Atomic workflow entity requested by the BDI environment
+        required: true
+        type: choice
+        options: [build, test, security, staging, production, rollback_production]
+      execution_id:
+        description: Adapter-generated correlation identifier
+        required: true
+        type: string
+      source_run_id:
+        description: Successful build run used by rollback_production
+        required: false
+        type: string
+      failure_mode:
+        description: Deterministic experiment failure mode
+        required: false
+        default: none
+        type: string
+      force_error_rate:
+        description: Deterministic application error rate
+        required: false
+        default: '0'
+        type: string
+      extra_latency_ms:
+        description: Deterministic application latency injection
+        required: false
+        default: '0'
+        type: string
+      execution_delay_ms:
+        description: Deterministic workflow duration injection
+        required: false
+        default: '0'
+        type: string
+      experiment_id:
+        description: Experiment correlation identifier
+        required: false
+        default: local
+        type: string
+      release_id:
+        description: Candidate/release correlation identifier
+        required: false
+        default: local
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  IMAGE_NAME: payment-service
+  IMAGE_TAG: entity-${{ github.run_id }}
+  SERVICE_VERSION: ${{ github.sha }}
+
+jobs:
+  execute_entity:
+    name: ${{ inputs.entity }}
+    # This atomic workflow is dispatched by BDI run_job(Entity). It must run
+    # on the persistent laptop runner so deployed containers survive the job.
+    runs-on: [self-hosted, linux, x64, bdi-demo]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image infrastructure
+        if: ${{ inputs.entity == 'build' || inputs.entity == 'test' || inputs.entity == 'security' || inputs.entity == 'staging' || inputs.entity == 'production' }}
+        run: docker build --tag "$IMAGE_NAME:$IMAGE_TAG" ./app
+
+      - name: Inject build failure
+        if: ${{ inputs.entity == 'build' && inputs.failure_mode == 'build_failure' }}
+        run: exit 1
+
+      - name: Execute build entity
+        if: ${{ inputs.entity == 'build' }}
+        run: |
+          docker image inspect "$IMAGE_NAME:$IMAGE_TAG"
+          docker save "$IMAGE_NAME:$IMAGE_TAG" --output payment-service-image.tar
+
+      - name: Publish build image artifact
+        if: ${{ inputs.entity == 'build' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: payment-image
+          path: payment-service-image.tar
+          retention-days: 7
+
+      - name: Execute test entity
+        if: ${{ inputs.entity == 'test' }}
+        run: |
+          if [ "${{ inputs.failure_mode }}" = "test_failure" ]; then exit 1; fi
+          docker run --rm "$IMAGE_NAME:$IMAGE_TAG" python -m unittest discover -s . -p 'test_*.py'
+
+      - name: Execute security entity
+        if: ${{ inputs.entity == 'security' }}
+        shell: bash
+        run: |
+          docker run --rm "$IMAGE_NAME:$IMAGE_TAG" python -m pip check
+          test "$(docker inspect --format '{{.Config.User}}' "$IMAGE_NAME:$IMAGE_TAG")" = "appuser"
+          if grep -RInE '(BEGIN (RSA|OPENSSH|EC) PRIVATE KEY|gh[pousr]_[A-Za-z0-9_]+|AKIA[0-9A-Z]{16})' app; then
+            echo 'Potential secret found in application files'
+            exit 1
+          fi
+
+      - name: Execute staging entity
+        if: ${{ inputs.entity == 'staging' }}
+        shell: bash
+        run: |
+          docker run --detach --name payment-staging --publish 8081:8080 \
+            --env SERVICE_VERSION="$SERVICE_VERSION" \
+            --env DEPLOYMENT_ENVIRONMENT=staging \
+            --env FAILURE_MODE="${{ inputs.failure_mode }}" \
+            --env FORCE_ERROR_RATE="${{ inputs.force_error_rate }}" \
+            --env EXTRA_LATENCY_MS="${{ inputs.extra_latency_ms }}" \
+            "$IMAGE_NAME:$IMAGE_TAG"
+          sleep $(( ${{ inputs.execution_delay_ms }} / 1000 ))
+          for attempt in {1..30}; do curl --fail --silent http://localhost:8081/health && exit 0 || sleep 1; done
+          exit 1
+
+      - name: Execute production entity
+        if: ${{ inputs.entity == 'production' }}
+        shell: bash
+        run: |
+          docker run --detach --name payment-production --publish 8082:8080 \
+            --env SERVICE_VERSION="$SERVICE_VERSION" \
+            --env DEPLOYMENT_ENVIRONMENT=production \
+            --env FAILURE_MODE="${{ inputs.failure_mode }}" \
+            --env FORCE_ERROR_RATE="${{ inputs.force_error_rate }}" \
+            --env EXTRA_LATENCY_MS="${{ inputs.extra_latency_ms }}" \
+            "$IMAGE_NAME:$IMAGE_TAG"
+          sleep $(( ${{ inputs.execution_delay_ms }} / 1000 ))
+          for attempt in {1..30}; do curl --fail --silent http://localhost:8082/health && exit 0 || sleep 1; done
+          exit 1
+
+      - name: Execute production rollback entity
+        if: ${{ inputs.entity == 'rollback_production' }}
+        shell: bash
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test -n "$SOURCE_RUN_ID"
+          gh run download "$SOURCE_RUN_ID" --name payment-image --dir rollback-image
+          docker load --input rollback-image/payment-service-image.tar
+          image_ref=$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep '^payment-service:' | head -n 1)
+          docker run --detach --name payment-production-rollback --publish 8082:8080 \
+            --env SERVICE_VERSION="rollback-$SOURCE_RUN_ID" \
+            --env DEPLOYMENT_ENVIRONMENT=production \
+            --env FAILURE_MODE="${{ inputs.failure_mode }}" \
+            --env FORCE_ERROR_RATE="${{ inputs.force_error_rate }}" \
+            --env EXTRA_LATENCY_MS="${{ inputs.extra_latency_ms }}" "$image_ref"
+          sleep $(( ${{ inputs.execution_delay_ms }} / 1000 ))
+          for attempt in {1..30}; do curl --fail --silent http://localhost:8082/health && exit 0 || sleep 1; done
+          exit 1
+
+      - name: Record entity execution metadata
+        if: always()
+        run: |
+          echo "entity=${{ inputs.entity }}" >> entity-execution.txt
+          echo "execution_id=${{ inputs.execution_id }}" >> entity-execution.txt
+          echo "experiment_id=${{ inputs.experiment_id }}" >> entity-execution.txt
+          echo "release_id=${{ inputs.release_id }}" >> entity-execution.txt
+          echo "run_id=${{ github.run_id }}" >> entity-execution.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: entity-execution-${{ github.run_id }}
+          path: entity-execution.txt

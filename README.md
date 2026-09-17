@@ -105,3 +105,24 @@ docker run --rm payment-service-test python -m unittest discover -s . -p 'test_*
 ```powershell
 docker compose down
 ```
+
+## Research demonstration
+
+The complete demonstration procedure is documented in
+[`docs/FINAL_DEMO_GUIDE.md`](docs/FINAL_DEMO_GUIDE.md). The required external
+machine and GitHub setup is documented in
+[`docs/USER_SETUP.md`](docs/USER_SETUP.md).
+
+After setup, the primary command is:
+
+```powershell
+.\run-demo.ps1 -Mode real
+```
+
+This command validates and generates the model, opens the telemetry and BDI
+monitor windows, and starts the Java/Jason controller. Real mode refuses to
+start unless the persistent deployment target is explicitly confirmed.
+
+The current implementation status is reported in
+[`docs/FINAL_DEMO_RESULTS.md`](docs/FINAL_DEMO_RESULTS.md) and
+[`docs/DEMO_STATUS.md`](docs/DEMO_STATUS.md).

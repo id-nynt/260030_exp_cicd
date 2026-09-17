@@ -1,0 +1,38 @@
+Runtime Services (RTS) is running at 192.168.0.129:64921
+Agent mind inspector is running at http://192.168.0.129:3275
+Sept 18, 2026 8:04:29 AM harness.ObservationEnvironment init
+INFO: Observation environment started
+Sept 18, 2026 8:04:29 AM harness.ScenarioEnvironment init
+INFO: initial_beliefs=[workflow_stopped,running(production),run_attempt(production,1)]
+Sept 18, 2026 8:04:30 AM jason.stdlib.println execute
+INFO: Master goal started.
+Sept 18, 2026 8:04:30 AM jason.stdlib.println execute
+INFO: Workflow stopped before achievement: production = success
+Sept 18, 2026 8:04:30 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"production","property":"execution_status","value":"success","timestamp":"2026-09-17T22:04:29.918868300Z"} belief=status(production,success)
+Sept 18, 2026 8:04:30 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"production","property":"duration","value":100001,"timestamp":"2026-09-17T22:04:29.918868300Z"} belief=duration(production,100001)
+Sept 18, 2026 8:04:31 AM jason.stdlib.println execute
+INFO: production completed successfully.
+Sept 18, 2026 8:04:31 AM jason.stdlib.println execute
+INFO: Maintenance violated: production duration 100001 > 100000.
+Sept 18, 2026 8:04:31 AM jason.stdlib.println execute
+INFO: Running recovery entity: rollback_production for production.
+Sept 18, 2026 8:04:31 AM harness.ObservationEnvironment executeAction
+INFO: action agent=bdi_agent run_job entity=rollback_production
+Sept 18, 2026 8:04:31 AM jason.stdlib.println execute
+INFO: Pipeline is stopped.
+Sept 18, 2026 8:04:31 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"rollback_production","property":"execution_status","value":"success","timestamp":"2026-09-17T22:04:31.325469200Z"} belief=status(rollback_production,success)
+Sept 18, 2026 8:04:31 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"rollback_production","property":"duration","value":42,"timestamp":"2026-09-17T22:04:31.325469200Z"} belief=duration(rollback_production,42)
+Sept 18, 2026 8:04:32 AM jason.stdlib.println execute
+INFO: Recovery completed successfully: rollback_production.
+Sept 18, 2026 8:04:32 AM jason.stdlib.println execute
+INFO: Master goal not achieved.
+Sept 18, 2026 8:04:32 AM harness.ScenarioEnvironment stop
+INFO: scenario=scenario7 run_job_calls=[rollback_production]
+Sept 18, 2026 8:04:32 AM harness.ScenarioEnvironment stop
+INFO: final_beliefs={rollback_production|execution_status=status(rollback_production,success), production|duration=duration(production,100001), production|execution_status=status(production,success), rollback_production|duration=duration(rollback_production,42)}
+Sept 18, 2026 8:04:32 AM harness.ObservationEnvironment stop
+INFO: Observation environment stopped at 2026-09-17T22:04:32.630540700Z

@@ -6,7 +6,7 @@ The purpose is to validate the framework experimentally, not to build a producti
 
 The prototype contains:
 
-1. A small demo web application.
+1. A small demo payment service application.
 2. A GitHub Actions CI/CD pipeline.
 3. OpenTelemetry instrumentation for runtime telemetry.
 4. A telemetry/observation adapter.

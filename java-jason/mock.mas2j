@@ -1,0 +1,7 @@
+MAS generic_environment_mock {
+    infrastructure: Local
+    environment: harness.MockEnvironment
+    agents:
+        mock_agent;
+    aslSourcePath: "src/main/asl";
+}

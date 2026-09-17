@@ -1,0 +1,58 @@
+{
+    "scenario":  "scenario8",
+    "initial_beliefs":  [
+                            "INFO: initial_beliefs=[workflow_stopped,running(production),run_attempt(production,1)]"
+                        ],
+    "percept_sequence":  [
+                             "INFO: observation={\"entity\":\"production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:33.924240900Z\"} belief=status(production,success)",
+                             "INFO: observation={\"entity\":\"production\",\"property\":\"duration\",\"value\":1,\"timestamp\":\"2026-09-17T22:04:33.925242200Z\"} belief=duration(production,1)",
+                             "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:35.323583500Z\"} belief=status(rollback_production,success)",
+                             "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:35.323583500Z\"} belief=duration(rollback_production,42)"
+                         ],
+    "selected_plans":  [
+                           "INFO: Master goal started.",
+                           "INFO: Workflow stopped before achievement: production = success",
+                           "INFO: production completed successfully.",
+                           "INFO: Maintenance satisfied: production duration 1 \u003c= 100000.",
+                           "INFO: Avoidance violation detected for production.",
+                           "INFO: Recovery completed successfully: rollback_production.",
+                           "INFO: Master goal not achieved."
+                       ],
+    "run_job_calls":  [
+                          "rollback_production"
+                      ],
+    "expected_run_job_calls":  [
+                                   "rollback_production"
+                               ],
+    "retry_count":  0,
+    "expected_retry_count":  0,
+    "recovery_actions":  [
+                             "rollback_production"
+                         ],
+    "expected_recovery_actions":  [
+                                      "rollback_production"
+                                  ],
+    "final_state":  "recovered_stopped",
+    "expected_final_state":  "recovered_stopped",
+    "belief_changes":  [
+                           "INFO: observation={\"entity\":\"production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:33.924240900Z\"} belief=status(production,success)",
+                           "INFO: observation={\"entity\":\"production\",\"property\":\"duration\",\"value\":1,\"timestamp\":\"2026-09-17T22:04:33.925242200Z\"} belief=duration(production,1)",
+                           "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:35.323583500Z\"} belief=status(rollback_production,success)",
+                           "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:35.323583500Z\"} belief=duration(rollback_production,42)"
+                       ],
+    "final_beliefs":  [
+                          "INFO: final_beliefs={production|duration=duration(production,1), rollback_production|execution_status=status(rollback_production,success), rollback_production|duration=duration(rollback_production,42), production|execution_status=status(production,success)}"
+                      ],
+    "achievement_goals_satisfied":  false,
+    "maintenance_goals_satisfied":  true,
+    "maintenance_goals_violated":  false,
+    "avoidance_goals_violated":  true,
+    "master_goal_expected":  false,
+    "forbidden_entities":  [
+                               "build",
+                               "test",
+                               "security",
+                               "staging",
+                               "production"
+                           ]
+}

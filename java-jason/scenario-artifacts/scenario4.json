@@ -1,0 +1,90 @@
+{
+    "scenario":  "scenario4",
+    "initial_beliefs":  [
+                            "INFO: initial_beliefs=[workflow_active]"
+                        ],
+    "percept_sequence":  [
+                             "INFO: observation={\"entity\":\"build\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:04.280476Z\"} belief=status(build,success)",
+                             "INFO: observation={\"entity\":\"build\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:04.280476Z\"} belief=duration(build,42)",
+                             "INFO: observation={\"entity\":\"test\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:05.496975Z\"} belief=status(test,success)",
+                             "INFO: observation={\"entity\":\"test\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:05.496975Z\"} belief=duration(test,42)",
+                             "INFO: observation={\"entity\":\"security\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:06.276049800Z\"} belief=status(security,success)",
+                             "INFO: observation={\"entity\":\"security\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:06.276049800Z\"} belief=duration(security,42)",
+                             "INFO: observation={\"entity\":\"staging\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:07.499606300Z\"} belief=status(staging,success)",
+                             "INFO: observation={\"entity\":\"staging\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:07.499606300Z\"} belief=duration(staging,42)",
+                             "INFO: observation={\"entity\":\"production\",\"property\":\"execution_status\",\"value\":\"failure\",\"timestamp\":\"2026-09-17T22:04:08.277647500Z\"} belief=status(production,fail)",
+                             "INFO: observation={\"entity\":\"production\",\"property\":\"duration\",\"value\":41,\"timestamp\":\"2026-09-17T22:04:08.277647500Z\"} belief=duration(production,41)",
+                             "INFO: observation={\"entity\":\"production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:09.489750500Z\"} belief=status(production,success)",
+                             "INFO: observation={\"entity\":\"production\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:09.489750500Z\"} belief=duration(production,42)"
+                         ],
+    "selected_plans":  [
+                           "INFO: Master goal started.",
+                           "INFO: Pursuing achievement: production = success",
+                           "INFO: Running entity: build.",
+                           "INFO: build completed successfully.",
+                           "INFO: Running entity: test.",
+                           "INFO: test completed successfully.",
+                           "INFO: Running entity: security.",
+                           "INFO: security completed successfully.",
+                           "INFO: Running entity: staging.",
+                           "INFO: staging completed successfully.",
+                           "INFO: Running entity: production.",
+                           "INFO: production failed; retrying within configured retry budget.",
+                           "INFO: Running entity: production.",
+                           "INFO: production completed successfully.",
+                           "INFO: Maintenance satisfied: production duration 42 \u003c= 100000.",
+                           "INFO: Pipeline reached final success.",
+                           "INFO: Master goal achieved."
+                       ],
+    "run_job_calls":  [
+                          "build",
+                          "test",
+                          "security",
+                          "staging",
+                          "production",
+                          "production"
+                      ],
+    "expected_run_job_calls":  [
+                                   "build",
+                                   "test",
+                                   "security",
+                                   "staging",
+                                   "production",
+                                   "production"
+                               ],
+    "retry_count":  1,
+    "expected_retry_count":  1,
+    "recovery_actions":  [
+
+                         ],
+    "expected_recovery_actions":  [
+
+                                  ],
+    "final_state":  "completed_success",
+    "expected_final_state":  "completed_success",
+    "belief_changes":  [
+                           "INFO: observation={\"entity\":\"build\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:04.280476Z\"} belief=status(build,success)",
+                           "INFO: observation={\"entity\":\"build\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:04.280476Z\"} belief=duration(build,42)",
+                           "INFO: observation={\"entity\":\"test\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:05.496975Z\"} belief=status(test,success)",
+                           "INFO: observation={\"entity\":\"test\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:05.496975Z\"} belief=duration(test,42)",
+                           "INFO: observation={\"entity\":\"security\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:06.276049800Z\"} belief=status(security,success)",
+                           "INFO: observation={\"entity\":\"security\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:06.276049800Z\"} belief=duration(security,42)",
+                           "INFO: observation={\"entity\":\"staging\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:07.499606300Z\"} belief=status(staging,success)",
+                           "INFO: observation={\"entity\":\"staging\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:07.499606300Z\"} belief=duration(staging,42)",
+                           "INFO: observation={\"entity\":\"production\",\"property\":\"execution_status\",\"value\":\"failure\",\"timestamp\":\"2026-09-17T22:04:08.277647500Z\"} belief=status(production,fail)",
+                           "INFO: observation={\"entity\":\"production\",\"property\":\"duration\",\"value\":41,\"timestamp\":\"2026-09-17T22:04:08.277647500Z\"} belief=duration(production,41)",
+                           "INFO: observation={\"entity\":\"production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:09.489750500Z\"} belief=status(production,success)",
+                           "INFO: observation={\"entity\":\"production\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:09.489750500Z\"} belief=duration(production,42)"
+                       ],
+    "final_beliefs":  [
+                          "INFO: final_beliefs={test|execution_status=status(test,success), security|duration=duration(security,42), security|execution_status=status(security,success), build|execution_status=status(build,success), production|duration=duration(production,42), build|duration=duration(build,42), test|duration=duration(test,42), production|execution_status=status(production,success), staging|execution_status=status(staging,success), staging|duration=duration(staging,42)}"
+                      ],
+    "achievement_goals_satisfied":  true,
+    "maintenance_goals_satisfied":  true,
+    "maintenance_goals_violated":  false,
+    "avoidance_goals_violated":  false,
+    "master_goal_expected":  true,
+    "forbidden_entities":  [
+                               "rollback_production"
+                           ]
+}

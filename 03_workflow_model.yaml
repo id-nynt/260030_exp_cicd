@@ -1,49 +1,43 @@
-# Generated from pipeline.yaml and goal.yaml
-
+# Generated from 01_pipeline.yaml and 02_goal.yaml
 workflow:
-  name: "CI/CD Pipeline"
-
+  name: CI/CD Pipeline
   entities(E):
-    - build
-    - test
-    - security
-    - staging
-    - production
-    - rollback_production
-
+  - build
+  - test
+  - security
+  - staging
+  - production
+  - rollback_production
   dependencies(D):
-    - from: build
-      to: test
-
-    - from: test
-      to: security
-
-    - from: security
-      to: staging
-
-    - from: staging
-      to: production
-
+  - from: build
+    to: test
+  - from: test
+    to: security
+  - from: security
+    to: staging
+  - from: staging
+    to: production
   observable_properties(O):
     status:
-      values: [success, failure, cancelled, skipped, timeout]
-
+      values: &id001
+      - success
+      - failure
+      - cancelled
+      - skipped
+      - timeout
     duration:
       value: time
-
   recovery(R):
-    - from: production
-      to: rollback_production
-
-# Execution policy and observation contract.
+  - from: production
+    to: rollback_production
 execution:
-  max_retries: 0
+  max_retries: 1
   observation_schema:
-    status: [success, failure, cancelled, skipped, timeout]
+    status: *id001
     duration_unit: milliseconds
-    required_for: [production]
-    attempt_id_required: true
-
+    required_for:
+    - production
+    attempt_id_required: false
 recovery_policy:
   rollback_production:
     run_after: production_failure

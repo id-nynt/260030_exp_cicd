@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+}
+
+group = 'bdi.cicd'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jason:jason:3.3.0'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', '../telemetry']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task runMock(type: JavaExec, dependsOn: classes) {
+    mainClass = 'jason.infra.local.RunLocalMAS'
+    classpath = sourceSets.main.runtimeClasspath
+    args 'mock.mas2j'
+}

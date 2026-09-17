@@ -1,0 +1,7 @@
+MAS bdi_scenario {
+    infrastructure: Local
+    environment: harness.ScenarioEnvironment
+    agents:
+        bdi_agent;
+    aslSourcePath: ".";
+}

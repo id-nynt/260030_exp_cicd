@@ -1,0 +1,8 @@
+Local service on port 8081 did not become healthy
+At C:\NHI\2026_IT-Project\260030_bdi\260917_ex3\experiments\run_experiments.ps1:90 char:5
++     throw "Local service on port $port did not become healthy"
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Local service o... become healthy:String) [], RuntimeException
+    + FullyQualifiedErrorId : Local service on port 8081 did not become healthy
+ 
+

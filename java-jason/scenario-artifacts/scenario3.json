@@ -1,0 +1,66 @@
+{
+    "scenario":  "scenario3",
+    "initial_beliefs":  [
+                            "INFO: initial_beliefs=[workflow_active]"
+                        ],
+    "percept_sequence":  [
+                             "INFO: observation={\"entity\":\"build\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:03:59.279142200Z\"} belief=status(build,success)",
+                             "INFO: observation={\"entity\":\"build\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:03:59.279142200Z\"} belief=duration(build,42)",
+                             "INFO: observation={\"entity\":\"test\",\"property\":\"execution_status\",\"value\":\"failure\",\"timestamp\":\"2026-09-17T22:04:00.508644800Z\"} belief=status(test,fail)",
+                             "INFO: observation={\"entity\":\"test\",\"property\":\"duration\",\"value\":41,\"timestamp\":\"2026-09-17T22:04:00.508644800Z\"} belief=duration(test,41)",
+                             "INFO: observation={\"entity\":\"test\",\"property\":\"execution_status\",\"value\":\"failure\",\"timestamp\":\"2026-09-17T22:04:01.271166800Z\"} belief=status(test,fail)",
+                             "INFO: observation={\"entity\":\"test\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:01.271166800Z\"} belief=duration(test,42)"
+                         ],
+    "selected_plans":  [
+                           "INFO: Master goal started.",
+                           "INFO: Pursuing achievement: production = success",
+                           "INFO: Running entity: build.",
+                           "INFO: build completed successfully.",
+                           "INFO: Running entity: test.",
+                           "INFO: test failed; retrying within configured retry budget.",
+                           "INFO: Running entity: test.",
+                           "INFO: test failed; workflow stopped.",
+                           "INFO: Master goal not achieved."
+                       ],
+    "run_job_calls":  [
+                          "build",
+                          "test",
+                          "test"
+                      ],
+    "expected_run_job_calls":  [
+                                   "build",
+                                   "test",
+                                   "test"
+                               ],
+    "retry_count":  1,
+    "expected_retry_count":  1,
+    "recovery_actions":  [
+
+                         ],
+    "expected_recovery_actions":  [
+
+                                  ],
+    "final_state":  "stopped",
+    "expected_final_state":  "stopped",
+    "belief_changes":  [
+                           "INFO: observation={\"entity\":\"build\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:03:59.279142200Z\"} belief=status(build,success)",
+                           "INFO: observation={\"entity\":\"build\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:03:59.279142200Z\"} belief=duration(build,42)",
+                           "INFO: observation={\"entity\":\"test\",\"property\":\"execution_status\",\"value\":\"failure\",\"timestamp\":\"2026-09-17T22:04:00.508644800Z\"} belief=status(test,fail)",
+                           "INFO: observation={\"entity\":\"test\",\"property\":\"duration\",\"value\":41,\"timestamp\":\"2026-09-17T22:04:00.508644800Z\"} belief=duration(test,41)",
+                           "INFO: observation={\"entity\":\"test\",\"property\":\"execution_status\",\"value\":\"failure\",\"timestamp\":\"2026-09-17T22:04:01.271166800Z\"} belief=status(test,fail)",
+                           "INFO: observation={\"entity\":\"test\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:01.271166800Z\"} belief=duration(test,42)"
+                       ],
+    "final_beliefs":  [
+                          "INFO: final_beliefs={test|duration=duration(test,42), build|execution_status=status(build,success), build|duration=duration(build,42), test|execution_status=status(test,fail)}"
+                      ],
+    "achievement_goals_satisfied":  false,
+    "maintenance_goals_satisfied":  false,
+    "maintenance_goals_violated":  false,
+    "avoidance_goals_violated":  false,
+    "master_goal_expected":  false,
+    "forbidden_entities":  [
+                               "security",
+                               "staging",
+                               "production"
+                           ]
+}

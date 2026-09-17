@@ -9,8 +9,8 @@ goal:
   duration_unit: milliseconds
 
   avoid(V):
-    - production.status == success
+    - condition: production.status == success
       when: test.status != success
 
-    - production.status == success
+    - condition: production.status == success
       when: staging.status != success

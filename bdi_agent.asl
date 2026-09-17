@@ -1,21 +1,12 @@
-// ======================
-// BELIEFS
-// ======================
+// Generated from 03_workflow_model.yaml; do not edit.
 
-// WORKFLOW MODEL: ENTITIES
-
-// Normal pipeline entities.
 entity(build).
 entity(test).
 entity(security).
 entity(staging).
 entity(production).
-
-// Recovery entity.
 entity(rollback_production).
 recovery_entity(rollback_production).
-
-// WORKFLOW MODEL: DEPENDENCIES
 
 depends(build, []).
 depends(test, [build]).
@@ -23,29 +14,30 @@ depends(security, [test]).
 depends(staging, [security]).
 depends(production, [staging]).
 
-// WORKFLOW MODEL: RECOVERY
 recovery(production, rollback_production).
-
-// FINAL ENTITY
 final_phase(production).
-
-// GOAL MODEL: ACHIEVEMENT
 
 achievement(production, success).
 achievement(staging, success).
-
-// GOAL MODEL: MAINTENANCE
 max_duration(production, 100000).
-
-// GOAL MODEL: AVOIDANCE
 avoid_missing(production, test).
 avoid_missing(production, staging).
 
-// POLICY
 duration_unit(milliseconds).
-run_sequence(0).
+max_retries(1).
 
-// CONTROLLER STATE
+// Controller-derived attempt counters.
+attempt_count(build, 0).
+attempt_count(test, 0).
+attempt_count(security, 0).
+attempt_count(staging, 0).
+attempt_count(production, 0).
+attempt_count(rollback_production, 0).
+
+// Project-specific beliefs are generated from 01_pipeline.yaml and 02_goal.yaml.
+
+// Generic controller runtime state.
+run_sequence(0).
 workflow_active.
 
 
@@ -71,6 +63,7 @@ nextentity(Entity) :-
     workflow_active
     & not workflow_stopped
     & entity(Entity)
+    & not recovery_entity(Entity)
     & depends(Entity, Requirements)
     & not running(Entity)
     & not terminal(Entity)
@@ -89,6 +82,11 @@ duration_violation(Entity, Time, Max) :-
     & duration(Entity, Time)
     & Time > Max.
 
+retry_allowed(Entity) :-
+    max_retries(Max)
+    & attempt_count(Entity, Attempts)
+    & Attempts <= Max.
+
 // AVOIDANCE
 avoidance_violation(Entity) :-
     avoid_missing(Entity, Required)
@@ -105,10 +103,9 @@ avoidance_violation(Entity) :-
 // MASTER GOAL
 
 +!master_goal
-    : true
+    : achievement(Entity, Desired)
     <- .print("Master goal started.");
-       !need_achieve(production, success);
-       !need_achieve(staging, success);
+       !need_achieve(Entity, Desired);
        !check_avoidance.
 
 // ======================
@@ -197,14 +194,21 @@ avoidance_violation(Entity) :-
     : entity(Entity)
       & not running(Entity)
       & not terminal(Entity)
-    <- run_sequence(Old);
+    <- ?run_sequence(Old);
        Attempt = Old + 1;
        -run_sequence(Old);
        +run_sequence(Attempt);
+       ?attempt_count(Entity, PreviousAttempts);
+       CurrentAttempts = PreviousAttempts + 1;
+       -attempt_count(Entity, PreviousAttempts);
+       +attempt_count(Entity, CurrentAttempts);
+       -status(Entity, success);
+       -status(Entity, fail);
        -status(Entity, _, _);
        -status(Entity, _);
        -duration(Entity, _);
        -duration(Entity, _, _);
+       -success_handling(Entity);
        -phase_result(Entity, _);
        +running(Entity);
        +run_attempt(Entity, Attempt);
@@ -215,13 +219,36 @@ avoidance_violation(Entity) :-
 // OBSERVATIONS -> PHASE RESULTS
 // ======================
 
+// Generic normalized beliefs are bridged to the attempt-qualified beliefs
+// used internally by this BDI program. This is representation adaptation,
+// not workflow policy.
++status(Entity, success)
+    : running(Entity)
+      & run_attempt(Entity, Attempt)
+      & not status(Entity, Attempt, success)
+    <- +status(Entity, Attempt, success).
+
++status(Entity, fail)
+    : running(Entity)
+      & run_attempt(Entity, Attempt)
+      & not status(Entity, Attempt, failure)
+    <- +status(Entity, Attempt, failure).
+
++duration(Entity, Time)
+    : running(Entity)
+      & run_attempt(Entity, Attempt)
+      & not duration(Entity, Attempt, Time)
+    <- +duration(Entity, Attempt, Time).
+
 // SUCCESS WITHOUT DURATION REQUIREMENT
 +status(Entity, Attempt, success)
     : running(Entity)
       & run_attempt(Entity, Attempt)
       & not max_duration(Entity, _)
+      & not success_handling(Entity)
       & not phase_result(Entity, success)
-    <- +status(Entity, success);
+    <- +success_handling(Entity);
+       +status(Entity, success);
        -phase_result(Entity, _);
        +phase_result(Entity, success).
 
@@ -233,8 +260,10 @@ avoidance_violation(Entity) :-
       & run_attempt(Entity, Attempt)
       & max_duration(Entity, _)
       & duration(Entity, _)
+      & not success_handling(Entity)
       & not phase_result(Entity, success)
-    <- +status(Entity, success);
+    <- +success_handling(Entity);
+       +status(Entity, success);
        -phase_result(Entity, _);
        +phase_result(Entity, success).
 
@@ -245,6 +274,16 @@ avoidance_violation(Entity) :-
     : running(Entity)
       & run_attempt(Entity, Attempt)
       & not status(Entity, Attempt, success)
+      & not status(Entity, Attempt, failure)
+      & status(Entity, fail)
+    <- +duration(Entity, Time);
+       +status(Entity, Attempt, failure).
+
++duration(Entity, Attempt, Time)
+    : running(Entity)
+      & run_attempt(Entity, Attempt)
+      & not status(Entity, Attempt, success)
+      & status(Entity, Attempt, failure)
     <- +duration(Entity, Time).
 
 
@@ -253,8 +292,10 @@ avoidance_violation(Entity) :-
       & run_attempt(Entity, Attempt)
       & status(Entity, Attempt, success)
       & max_duration(Entity, _)
+      & not success_handling(Entity)
       & not phase_result(Entity, success)
-    <- +duration(Entity, Time);
+    <- +success_handling(Entity);
+       +duration(Entity, Time);
        -phase_result(Entity, _);
        +phase_result(Entity, success).
 
@@ -264,7 +305,8 @@ avoidance_violation(Entity) :-
     : running(Entity)
       & run_attempt(Entity, Attempt)
       & not phase_result(Entity, fail)
-    <- +status(Entity, failure);
+    <- .print("Failure observation accepted: ", Entity, " attempt ", Attempt, ".");
+       +status(Entity, failure);
        -phase_result(Entity, _);
        +phase_result(Entity, fail).
 
@@ -310,11 +352,24 @@ avoidance_violation(Entity) :-
 
        !run_pipeline.
 
+// NORMAL ENTITY FAILURE -> RETRY
+
++phase_result(Entity, fail)
+    : running(Entity)
+      & not recovery_entity(Entity)
+      & retry_allowed(Entity)
+    <- -running(Entity);
+       -run_attempt(Entity, _);
+       -phase_result(Entity, _);
+       .print(Entity, " failed; retrying within configured retry budget.");
+       !run_pipeline.
+
 // NORMAL ENTITY FAILURE -> RECOVERY
 
 +phase_result(Entity, fail)
     : running(Entity)
       & not recovery_entity(Entity)
+      & not retry_allowed(Entity)
       & recovery(Entity, Recovery)
     <- -running(Entity);
        -run_attempt(Entity, _);
@@ -336,6 +391,22 @@ avoidance_violation(Entity) :-
        .print(Entity, " failed; workflow stopped.");
        !check_master_goal.
 
+// RUNTIME FAILURE AFTER A PREVIOUSLY SUCCESSFUL EXECUTION
+//
+// Health telemetry is normalized to status(Entity, fail).  When the entity is
+// no longer running, this is a runtime degradation rather than a new attempt
+// result.  Recovery remains entirely data-driven by recovery/2.
++status(Entity, fail)
+    : entity(Entity)
+      & not recovery_entity(Entity)
+      & not running(Entity)
+      & not workflow_stopped
+      & recovery(Entity, Recovery)
+      & not terminal(Entity, runtime_failure)
+    <- +terminal(Entity, runtime_failure);
+       .print("Runtime failure detected for ", Entity, "; recovery = ", Recovery, ".");
+       !recover(Entity).
+
 // ======================
 // RECOVERY
 // ======================
@@ -346,14 +417,21 @@ avoidance_violation(Entity) :-
     : recovery(Entity, Recovery)
       & entity(Recovery)
       & not running(Recovery)
-    <- run_sequence(Old);
+    <- ?run_sequence(Old);
        Attempt = Old + 1;
        -run_sequence(Old);
        +run_sequence(Attempt);
+       ?attempt_count(Recovery, PreviousAttempts);
+       CurrentAttempts = PreviousAttempts + 1;
+       -attempt_count(Recovery, PreviousAttempts);
+       +attempt_count(Recovery, CurrentAttempts);
+       -status(Recovery, success);
+       -status(Recovery, fail);
        -status(Recovery, _, _);
        -status(Recovery, _);
        -duration(Recovery, _);
        -duration(Recovery, _, _);
+       -success_handling(Recovery);
        -phase_result(Recovery, _);
        +running(Recovery);
        +run_attempt(Recovery, Attempt);
@@ -482,12 +560,25 @@ avoidance_violation(Entity) :-
 // MASTER GOAL ASSESSMENT
 // ======================
 
+achievement_satisfied(Entity, Desired) :-
+    achievement(Entity, Desired)
+    & phase_result(Entity, Desired).
+
+achievement_unsatisfied(Entity, Desired) :-
+    achievement(Entity, Desired)
+    & not phase_result(Entity, Desired).
+
+all_achievements_satisfied :-
+    not achievement_unsatisfied(_, _).
+
+maintenance_violation(Entity) :-
+    duration_violation(Entity, _, _).
+
 // ALL GOALS SATISFIED
 
 +!check_master_goal
-    : phase_result(production, success)
-      & phase_result(staging, success)
-      & duration_ok(production, Time, Max)
+    : all_achievements_satisfied
+      & not maintenance_violation(_)
       & not avoidance_violation(_)
     <- +master_goal_achieved;
        .print("Master goal achieved.").

@@ -1,0 +1,7 @@
+MAS bdi_real {
+    infrastructure: Local
+    environment: harness.GitHubEnvironment
+    agents:
+        bdi_agent;
+    aslSourcePath: ".";
+}

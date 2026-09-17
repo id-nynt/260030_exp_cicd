@@ -1,0 +1,79 @@
+{
+  "scenarios": [
+    {
+      "name": "healthy_pipeline",
+      "local": {"staging": {"failure_mode": "none"}, "production": {"failure_mode": "none"}},
+      "execution": {},
+      "expected": {"actions": ["build", "test", "security", "staging", "production"], "state": "completed_success", "master_goal": true}
+    },
+    {
+      "name": "transient_build_test_failure",
+      "local": {"staging": {"failure_mode": "none"}, "production": {"failure_mode": "none"}},
+      "execution": {
+        "build": [{"failure_mode": "build_failure"}, {"failure_mode": "none"}],
+        "test": [{"failure_mode": "test_failure"}, {"failure_mode": "none"}]
+      },
+      "expected": {"actions": ["build", "build", "test", "test", "security", "staging", "production"], "state": "completed_success", "master_goal": true, "retry_count": 2}
+    },
+    {
+      "name": "permanent_test_failure",
+      "local": {"staging": {"failure_mode": "none"}, "production": {"failure_mode": "none"}},
+      "execution": {"test": [{"failure_mode": "test_failure"}]},
+      "expected": {"actions": ["build", "test", "test"], "state": "stopped", "master_goal": false, "retry_count": 1, "no_entities": ["security", "staging", "production"]}
+    },
+    {
+      "name": "staging_failure",
+      "local": {"staging": {"failure_mode": "none"}, "production": {"failure_mode": "none"}},
+      "execution": {"staging": [{"failure_mode": "health_failure"}]},
+      "expected": {"actions": ["build", "test", "security", "staging", "staging"], "state": "stopped", "master_goal": false, "retry_count": 1, "no_entities": ["production"]}
+    },
+    {
+      "name": "staging_high_latency",
+      "local": {"staging": {"failure_mode": "high_latency", "extra_latency_ms": "1200"}, "production": {"failure_mode": "none"}},
+      "execution": {},
+      "expected": {"actions": ["build", "test", "security", "staging", "production"], "state": "completed_success", "master_goal": true, "observation": {"entity": "staging", "property": "latency", "min": 1000}}
+    },
+    {
+      "name": "staging_high_error_rate",
+      "local": {"staging": {"failure_mode": "high_error_rate", "force_error_rate": "1"}, "production": {"failure_mode": "none"}},
+      "execution": {},
+      "expected": {"actions": ["build", "test", "security", "staging", "production"], "state": "completed_success", "master_goal": true, "observation": {"entity": "staging", "property": "error_rate", "min": 0.9}}
+    },
+    {
+      "name": "production_high_latency",
+      "local": {"staging": {"failure_mode": "none"}, "production": {"failure_mode": "high_latency", "extra_latency_ms": "1200"}},
+      "execution": {},
+      "expected": {"actions": ["build", "test", "security", "staging", "production"], "state": "completed_success", "master_goal": true, "observation": {"entity": "production", "property": "latency", "min": 1000}}
+    },
+    {
+      "name": "production_high_error_rate",
+      "local": {"staging": {"failure_mode": "none"}, "production": {"failure_mode": "high_error_rate", "force_error_rate": "1"}},
+      "execution": {},
+      "expected": {"actions": ["build", "test", "security", "staging", "production"], "state": "completed_success", "master_goal": true, "observation": {"entity": "production", "property": "error_rate", "min": 0.9}}
+    },
+    {
+      "name": "production_health_failure",
+      "local": {"staging": {"failure_mode": "none"}, "production": {"failure_mode": "none"}},
+      "execution": {"production": [{"failure_mode": "health_failure"}], "rollback_production": [{"failure_mode": "none"}]},
+      "expected": {"actions": ["build", "test", "security", "staging", "production", "production", "rollback_production"], "state": "recovered_stopped", "master_goal": false, "recovery_actions": ["rollback_production"]}
+    },
+    {
+      "name": "production_maintenance_duration_violation",
+      "local": {"staging": {"failure_mode": "none"}, "production": {"failure_mode": "none"}},
+      "execution": {"production": [{"failure_mode": "none", "execution_delay_ms": "100001"}], "rollback_production": [{"failure_mode": "none"}]},
+      "expected": {"actions": ["build", "test", "security", "staging", "production", "rollback_production"], "state": "recovered_stopped", "master_goal": false, "maintenance_violated": true, "recovery_actions": ["rollback_production"]}
+    },
+    {
+      "name": "successful_recovery",
+      "local": {"staging": {"failure_mode": "none"}, "production": {"failure_mode": "none"}},
+      "execution": {"production": [{"failure_mode": "health_failure"}], "rollback_production": [{"failure_mode": "none"}]},
+      "expected": {"actions": ["build", "test", "security", "staging", "production", "production", "rollback_production"], "state": "recovered_stopped", "master_goal": false, "recovery_actions": ["rollback_production"]}
+    },
+    {
+      "name": "failed_recovery",
+      "local": {"staging": {"failure_mode": "none"}, "production": {"failure_mode": "none"}},
+      "execution": {"production": [{"failure_mode": "health_failure"}], "rollback_production": [{"failure_mode": "health_failure"}]},
+      "expected": {"actions": ["build", "test", "security", "staging", "production", "production", "rollback_production"], "state": "recovery_failed", "master_goal": false, "recovery_actions": ["rollback_production"]}
+    }
+  ]
+}
