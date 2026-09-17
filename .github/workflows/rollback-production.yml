@@ -1,0 +1,56 @@
+name: Rollback production
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Successful CI/CD run containing the image artifact to restore
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  rollback_production:
+    name: rollback_production
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download image from selected CI/CD run
+        uses: actions/download-artifact@v4
+        with:
+          name: payment-image
+          path: rollback-image
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - name: Load rollback image
+        run: docker load --input rollback-image/payment-service-image.tar
+      - name: Find loaded image
+        id: image
+        shell: bash
+        run: echo "ref=$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep '^payment-service:' | head -n 1)" >> "$GITHUB_OUTPUT"
+      - name: Roll back production
+        run: |
+          docker run --detach --name payment-production-rollback --publish 8082:8080 \
+            --env SERVICE_VERSION=rollback-${{ inputs.source_run_id }} \
+            --env DEPLOYMENT_ENVIRONMENT=production \
+            --env FAILURE_MODE=none \
+            "${{ steps.image.outputs.ref }}"
+      - name: Verify rolled-back production health
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent http://localhost:8082/health; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Save rollback logs
+        if: always()
+        run: docker logs payment-production-rollback > rollback-production.log 2>&1 || true
+      - name: Upload rollback logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rollback-production-logs-${{ github.run_id }}
+          path: rollback-production.log

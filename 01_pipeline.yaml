@@ -1,0 +1,92 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: build_application
+        run: ./scripts/build.sh
+      - name: upload_build_artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: download_build_artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/
+      - name: run_tests
+        run: ./scripts/test.sh
+
+  security:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: download_build_artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/
+      - name: run_security_scan
+        run: ./scripts/security.sh
+
+  staging:
+    needs: security
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: download_build_artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/
+      - name: deploy_staging
+        run: ./scripts/deploy.sh staging
+
+      - name: health_check_staging
+        run: ./scripts/health_check.sh staging
+
+      - name: monitor_staging
+        run: ./scripts/monitor.sh staging
+
+  production:
+    needs: staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: download_build_artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/
+      - name: deploy_production
+        run: ./scripts/deploy.sh production
+
+      - name: health_check_production
+        run: ./scripts/health_check.sh production
+
+      - name: monitor_production
+        run: ./scripts/monitor.sh production
+
+  rollback_production:
+    needs: production
+    # Roll back only an actual production failure, not an upstream skip.
+    if: ${{ always() && needs.production.result == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: rollback_production
+        run: ./scripts/rollback.sh production
