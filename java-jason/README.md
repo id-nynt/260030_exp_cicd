@@ -83,6 +83,25 @@ New-Item -ItemType Directory -Force build\test-classes | Out-Null
 
 ## Run the Jason mock integration test
 
+The Gradle task executes the `.mas2j` file and is the preferred way to start
+the MAS console:
+
+```powershell
+cd java-jason
+gradle runMock --console=plain --no-daemon
+```
+
+The real BDI MAS console is started with:
+
+```powershell
+cd java-jason
+gradle runReal --console=plain --no-daemon
+```
+
+`runReal` executes `real.mas2j`, which loads the generated root-level
+`bdi_agent.asl` and wires `GitHubEnvironment`. It requires the real-mode
+environment variables described below.
+
 ```powershell
 New-Item -ItemType Directory -Force build\tmp | Out-Null
 

@@ -111,6 +111,7 @@ jobs:
         if: ${{ inputs.entity == 'staging' }}
         shell: bash
         run: |
+          docker rm -f payment-staging >/dev/null 2>&1 || true
           docker run --detach --name payment-staging --publish 8081:8080 \
             --env SERVICE_VERSION="$SERVICE_VERSION" \
             --env DEPLOYMENT_ENVIRONMENT=staging \
@@ -126,6 +127,7 @@ jobs:
         if: ${{ inputs.entity == 'production' }}
         shell: bash
         run: |
+          docker rm -f payment-production >/dev/null 2>&1 || true
           docker run --detach --name payment-production --publish 8082:8080 \
             --env SERVICE_VERSION="$SERVICE_VERSION" \
             --env DEPLOYMENT_ENVIRONMENT=production \
@@ -145,6 +147,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           test -n "$SOURCE_RUN_ID"
+          docker rm -f payment-production payment-production-rollback >/dev/null 2>&1 || true
           gh run download "$SOURCE_RUN_ID" --name payment-image --dir rollback-image
           docker load --input rollback-image/payment-service-image.tar
           image_ref=$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep '^payment-service:' | head -n 1)

@@ -7,6 +7,7 @@ param(
     [int]$IntervalSeconds = 5
 )
 $ErrorActionPreference = 'Continue'
+$Host.UI.RawUI.WindowTitle = 'TELEMETRY MONITOR'
 function Get-MetricValue([string]$text, [string]$name) {
     $pattern = "(?m)^$([regex]::Escape($name))(?:\{[^}]*\})?\s+([-+0-9.eE]+)"
     $match = [regex]::Match($text, $pattern)

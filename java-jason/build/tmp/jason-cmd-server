@@ -1,6 +1,6 @@
 #running mas in jason
-#Fri Sep 18 08:04:33 AEST 2026
-bdi_real=192.168.0.129\:63172
-bdi_scenario=192.168.0.129\:64923
+#Fri Sep 18 09:10:35 AEST 2026
+bdi_real=192.168.0.129\:58413
+bdi_scenario=192.168.0.129\:55646
 generic_environment_mock=192.168.0.129\:64117
 latest___mas=bdi_scenario

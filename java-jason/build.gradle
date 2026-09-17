@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+defaultTasks 'run'
+
 group = 'bdi.cicd'
 version = '1.0.0'
 
@@ -40,5 +42,30 @@ test {
 task runMock(type: JavaExec, dependsOn: classes) {
     mainClass = 'jason.infra.local.RunLocalMAS'
     classpath = sourceSets.main.runtimeClasspath
+    workingDir projectDir
     args 'mock.mas2j'
+}
+
+// MAS Console. This follows the bdi/ sample: Gradle runs RunLocalMAS, which
+// executes the selected .mas2j file and streams Jason/AgentSpeak output.
+task run(type: JavaExec, dependsOn: classes) {
+    group = 'Jason'
+    description = 'runs the real BDI MAS console from real.mas2j'
+    mainClass = 'jason.infra.local.RunLocalMAS'
+    classpath = sourceSets.main.runtimeClasspath
+    workingDir projectDir.parentFile
+    args "${projectDir.name}/real.mas2j", '--log-conf', "${projectDir.name}/logging.properties"
+}
+
+// Explicit alias for callers that prefer a descriptive task name.
+task runReal {
+    dependsOn run
+}
+
+task runScenario(type: JavaExec, dependsOn: classes) {
+    mainClass = 'jason.infra.local.RunLocalMAS'
+    classpath = sourceSets.main.runtimeClasspath
+    workingDir projectDir.parentFile
+    systemProperty 'bdi.scenario', project.findProperty('scenario') ?: 'scenario1'
+    args "${projectDir.name}/scenario.mas2j"
 }

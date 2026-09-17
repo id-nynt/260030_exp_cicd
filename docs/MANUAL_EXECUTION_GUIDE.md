@@ -4,25 +4,34 @@ This guide explains the framework as it is currently implemented. It separates t
 
 ## Why the MAS console appears
 
-The commands in `java-jason/run_scenarios.ps1` and `java-jason/run_healthy_demo.ps1` start Jason with:
+The real MAS console is started by the Gradle `runReal` task, which executes
+`java-jason/real.mas2j`:
 
 ```text
-jason.infra.local.RunLocalMAS
+gradle runReal --console=plain --no-daemon
 ```
 
-That command starts a local multi-agent system in the foreground. Its console output is the BDI execution stream: selected actions, observations converted to beliefs, plan messages, and terminal state. It is not a second CI/CD pipeline and it is not the GitHub Actions console.
+That task starts a local multi-agent system in the foreground. Its console
+output is the BDI execution stream: selected actions, observations converted to
+beliefs, plan messages, and terminal state. It is not a second CI/CD pipeline
+and it is not the GitHub Actions console.
 
-The `-Djava.awt.headless=true` option suppresses graphical UI requirements; it does not suppress Java/Jason logging. Stop it with `Ctrl+C` when running it manually. The deterministic scenario runner stops its MAS automatically after the expected terminal action.
+The `BDI MAS CONSOLE` window is the Gradle process running `real.mas2j`. Stop
+it with `Ctrl+C` when running it manually. The deterministic scenario runner
+stops its MAS automatically after the expected terminal action.
 
-## The recommended two-window layout
+## The three-window layout
 
-Use two PowerShell windows and, optionally, a browser:
+Run the real demo from one launcher shell. It opens three clearly titled
+PowerShell windows and, optionally, a browser:
 
 | Window | Run/watch | Evidence |
 |---|---|---|
-| A — application/telemetry | Docker Compose and `/health`/`/metrics` | service status, latency, error rate, health |
-| B — BDI/MAS | Jason launcher | BDI `run_job` decisions, normalized beliefs, retries, recovery |
+| `TELEMETRY MONITOR` | `/health`/`/metrics` for staging and production | service status, latency, error rate, health |
+| `BDI DECISION MONITOR` | structured JSONL event file | goals, percepts, beliefs, decisions, GitHub IDs |
+| `BDI MAS CONSOLE` | Jason launcher | raw Jason plans, `run_job`, retries, recovery, terminal state |
 | Browser — optional | `http://localhost:8081/metrics` and `http://localhost:8082/metrics` | raw Prometheus-format telemetry |
+| Browser — optional | application URLs and `/metrics` | deployed UI and raw metrics |
 | GitHub browser — real mode | Actions run page | remote workflow jobs and their step logs |
 
 For a machine-readable BDI stream in real mode, watch:
@@ -196,8 +205,7 @@ The generator updates `03_workflow_model.yaml`, `bdi_project.asl`, and `bdi_agen
 | Observe BDI decisions | Yes in the MAS console and structured JSON-lines logs |
 | Inject deterministic execution errors | Yes through `BDI_EXECUTION_PLAN` and workflow inputs |
 | Automatically compare expected vs actual mock behavior | Yes; Phase 3 has 8 passing scenarios |
-| One-click two-window operator experience | No; currently manual |
+| One-click three-window operator experience | Yes; `run-demo.ps1 -Mode real` |
 | Live visual BDI/telemetry dashboard | No; not implemented in this prototype |
 
 The framework and validation requirements are satisfied. The operator-experience expectation is only partially satisfied: the underlying BDI decision and telemetry records exist, but there is no one-command split-screen launcher or live dashboard yet.
-

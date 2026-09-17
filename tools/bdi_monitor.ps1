@@ -1,5 +1,6 @@
 param([Parameter(Mandatory=$true)][string]$LogFile)
 $ErrorActionPreference = 'Continue'
+$Host.UI.RawUI.WindowTitle = 'BDI DECISION MONITOR'
 Write-Host "BDI MONITOR: $LogFile" -ForegroundColor Green
 Write-Host 'Waiting for structured BDI events...'
 while (-not (Test-Path -LiteralPath $LogFile)) { Start-Sleep -Milliseconds 500 }

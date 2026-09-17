@@ -75,7 +75,7 @@ runtime artifacts and are intentionally not expanded here.
 | `java-jason/.../StructuredEventLogger.java` | Writes JSON-lines transition records | cross-cutting | source code | Java filesystem/logging | Real environment and executor | Yes for evaluation |
 | `java-jason/.../Mock*.java` | Mocks for isolated environment tests | Java/Jason | test support | Generic interfaces | Unit/mock tests | No |
 | `java-jason/.../Scenario*.java` | Deterministic in-memory BDI scenario harness | BDI test | test support | Jason environment and mock observations | `run_scenarios.ps1` | No for real path |
-| `java-jason/run_healthy_demo.ps1` | Starts real MAS/controller | integration | script | Compiles Java and launches `real.mas2j` | Developer | Yes |
+| `java-jason/run_healthy_demo.ps1` | Starts real MAS/controller | integration | script | Invokes Gradle `runReal`, which launches `real.mas2j` | Developer | Yes |
 | `java-jason/run_scenarios.ps1` | Runs six earlier mock BDI scenarios | BDI test | script | Java/Jason scenario MAS | Developer | No |
 | `experiments/scenarios.json` | Twelve configuration-driven experiment definitions | experiments | configuration | Defines local and GitHub injections/assertions | `run_experiments.ps1` | Yes for experiment protocol |
 | `experiments/run_experiments.ps1` | Resets Docker, starts controller, collects/asserts results | experiments | script | Docker Compose, Java, scenario catalog | Developer/experiment execution | Yes |

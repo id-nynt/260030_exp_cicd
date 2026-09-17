@@ -54,7 +54,7 @@ public class ObservationEnvironment extends Environment {
         observationThread = new Thread(this::pollObservations, "normalized-observation-poller");
         observationThread.setDaemon(true);
         observationThread.start();
-        LOG.info("Observation environment started");
+        console("[BDI Environment] observation environment started");
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ObservationEnvironment extends Environment {
         Term entityTerm = action.getTerm(0);
         String entity = entityTerm.toString();
         try {
-            LOG.info(() -> "action agent=" + agentName + " run_job entity=" + entity);
+            console("[BDI Environment] action agent=" + agentName + " run_job entity=" + entity);
             structured("bdi_action_requested", entity, Map.of(
                 "agent", agentName,
                 "triggered_event", "run_job(" + entity + ")",
@@ -81,6 +81,7 @@ public class ObservationEnvironment extends Environment {
             return true;
         } catch (Exception error) {
             LOG.log(Level.WARNING, "Workflow executor failed for entity " + entity, error);
+            console("[BDI Environment] action failed entity=" + entity + " error=" + error.getMessage());
             structured("execution_error", entity, Map.of("error", String.valueOf(error.getMessage())));
             return false;
         }
@@ -104,7 +105,7 @@ public class ObservationEnvironment extends Environment {
             // Jason must receive a new percept event for the new attempt.
             if (previous != null) removePercept(previous);
             addPercept(belief);
-            LOG.info(() -> "observation=" + observation.toJson() + " belief=" + beliefText);
+            console("[BDI Environment] observation=" + observation.toJson() + " belief=" + beliefText);
             structured("percept_published", observation.entity(), Map.of(
                 "property", observation.property(),
                 "value", observation.value(),
@@ -137,7 +138,8 @@ public class ObservationEnvironment extends Environment {
             try {
                 publishObservations(provider.getObservations());
             } catch (Exception error) {
-                LOG.log(Level.WARNING, "Observation provider unavailable", error);
+            LOG.log(Level.WARNING, "Observation provider unavailable", error);
+            console("[BDI Environment] observation provider unavailable: " + error.getMessage());
             }
             try {
                 Thread.sleep(Duration.ofSeconds(1).toMillis());
@@ -152,7 +154,13 @@ public class ObservationEnvironment extends Environment {
     public void stop() {
         polling = false;
         if (observationThread != null) observationThread.interrupt();
-        LOG.info("Observation environment stopped at " + Instant.now());
+        console("[BDI Environment] observation environment stopped at " + Instant.now());
         super.stop();
+    }
+
+    /** Console-first output matching the sample bdi environment behavior. */
+    private void console(String message) {
+        System.out.println(message);
+        System.out.flush();
     }
 }

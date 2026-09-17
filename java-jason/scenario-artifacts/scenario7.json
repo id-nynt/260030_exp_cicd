@@ -4,10 +4,10 @@
                             "INFO: initial_beliefs=[workflow_stopped,running(production),run_attempt(production,1)]"
                         ],
     "percept_sequence":  [
-                             "INFO: observation={\"entity\":\"production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:29.918868300Z\"} belief=status(production,success)",
-                             "INFO: observation={\"entity\":\"production\",\"property\":\"duration\",\"value\":100001,\"timestamp\":\"2026-09-17T22:04:29.918868300Z\"} belief=duration(production,100001)",
-                             "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:31.325469200Z\"} belief=status(rollback_production,success)",
-                             "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:31.325469200Z\"} belief=duration(rollback_production,42)"
+                             "INFO: observation={\"entity\":\"production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:55:44.186979Z\"} belief=status(production,success)",
+                             "INFO: observation={\"entity\":\"production\",\"property\":\"duration\",\"value\":100001,\"timestamp\":\"2026-09-17T22:55:44.186979Z\"} belief=duration(production,100001)",
+                             "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:55:45.550041400Z\"} belief=status(rollback_production,success)",
+                             "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:55:45.550041400Z\"} belief=duration(rollback_production,42)"
                          ],
     "selected_plans":  [
                            "INFO: Master goal started.",
@@ -34,13 +34,13 @@
     "final_state":  "recovered_stopped",
     "expected_final_state":  "recovered_stopped",
     "belief_changes":  [
-                           "INFO: observation={\"entity\":\"production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:29.918868300Z\"} belief=status(production,success)",
-                           "INFO: observation={\"entity\":\"production\",\"property\":\"duration\",\"value\":100001,\"timestamp\":\"2026-09-17T22:04:29.918868300Z\"} belief=duration(production,100001)",
-                           "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:04:31.325469200Z\"} belief=status(rollback_production,success)",
-                           "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:04:31.325469200Z\"} belief=duration(rollback_production,42)"
+                           "INFO: observation={\"entity\":\"production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:55:44.186979Z\"} belief=status(production,success)",
+                           "INFO: observation={\"entity\":\"production\",\"property\":\"duration\",\"value\":100001,\"timestamp\":\"2026-09-17T22:55:44.186979Z\"} belief=duration(production,100001)",
+                           "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"execution_status\",\"value\":\"success\",\"timestamp\":\"2026-09-17T22:55:45.550041400Z\"} belief=status(rollback_production,success)",
+                           "INFO: observation={\"entity\":\"rollback_production\",\"property\":\"duration\",\"value\":42,\"timestamp\":\"2026-09-17T22:55:45.550041400Z\"} belief=duration(rollback_production,42)"
                        ],
     "final_beliefs":  [
-                          "INFO: final_beliefs={rollback_production|execution_status=status(rollback_production,success), production|duration=duration(production,100001), production|execution_status=status(production,success), rollback_production|duration=duration(rollback_production,42)}"
+                          "INFO: final_beliefs={production|execution_status=status(production,success), rollback_production|duration=duration(rollback_production,42), rollback_production|execution_status=status(rollback_production,success), production|duration=duration(production,100001)}"
                       ],
     "achievement_goals_satisfied":  false,
     "maintenance_goals_satisfied":  false,

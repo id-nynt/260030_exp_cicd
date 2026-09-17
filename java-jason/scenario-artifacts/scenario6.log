@@ -1,94 +1,94 @@
-Runtime Services (RTS) is running at 192.168.0.129:63399
+Runtime Services (RTS) is running at 192.168.0.129:52626
 Agent mind inspector is running at http://192.168.0.129:3275
-Sept 18, 2026 8:04:20 AM harness.ObservationEnvironment init
+Sept 18, 2026 8:55:35 AM harness.ObservationEnvironment init
 INFO: Observation environment started
-Sept 18, 2026 8:04:20 AM harness.ScenarioEnvironment init
+Sept 18, 2026 8:55:35 AM harness.ScenarioEnvironment init
 INFO: initial_beliefs=[workflow_active]
-Sept 18, 2026 8:04:21 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:35 AM jason.stdlib.println execute
 INFO: Master goal started.
-Sept 18, 2026 8:04:21 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:35 AM jason.stdlib.println execute
 INFO: Pursuing achievement: production = success
-Sept 18, 2026 8:04:21 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:35 AM jason.stdlib.println execute
 INFO: Running entity: build.
-Sept 18, 2026 8:04:21 AM harness.ObservationEnvironment executeAction
+Sept 18, 2026 8:55:35 AM harness.ObservationEnvironment executeAction
 INFO: action agent=bdi_agent run_job entity=build
-Sept 18, 2026 8:04:21 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"build","property":"execution_status","value":"success","timestamp":"2026-09-17T22:04:21.084148300Z"} belief=status(build,success)
-Sept 18, 2026 8:04:21 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"build","property":"duration","value":42,"timestamp":"2026-09-17T22:04:21.084148300Z"} belief=duration(build,42)
-Sept 18, 2026 8:04:22 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:36 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"build","property":"execution_status","value":"success","timestamp":"2026-09-17T22:55:35.406049Z"} belief=status(build,success)
+Sept 18, 2026 8:55:36 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"build","property":"duration","value":42,"timestamp":"2026-09-17T22:55:35.406049Z"} belief=duration(build,42)
+Sept 18, 2026 8:55:36 AM jason.stdlib.println execute
 INFO: build completed successfully.
-Sept 18, 2026 8:04:22 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:36 AM jason.stdlib.println execute
 INFO: Running entity: test.
-Sept 18, 2026 8:04:22 AM harness.ObservationEnvironment executeAction
+Sept 18, 2026 8:55:36 AM harness.ObservationEnvironment executeAction
 INFO: action agent=bdi_agent run_job entity=test
-Sept 18, 2026 8:04:22 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"test","property":"execution_status","value":"success","timestamp":"2026-09-17T22:04:22.299466100Z"} belief=status(test,success)
-Sept 18, 2026 8:04:22 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"test","property":"duration","value":42,"timestamp":"2026-09-17T22:04:22.299466100Z"} belief=duration(test,42)
-Sept 18, 2026 8:04:23 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:37 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"test","property":"execution_status","value":"success","timestamp":"2026-09-17T22:55:36.622024500Z"} belief=status(test,success)
+Sept 18, 2026 8:55:37 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"test","property":"duration","value":42,"timestamp":"2026-09-17T22:55:36.622024500Z"} belief=duration(test,42)
+Sept 18, 2026 8:55:37 AM jason.stdlib.println execute
 INFO: test completed successfully.
-Sept 18, 2026 8:04:23 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:37 AM jason.stdlib.println execute
 INFO: Running entity: security.
-Sept 18, 2026 8:04:23 AM harness.ObservationEnvironment executeAction
+Sept 18, 2026 8:55:37 AM harness.ObservationEnvironment executeAction
 INFO: action agent=bdi_agent run_job entity=security
-Sept 18, 2026 8:04:23 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"security","property":"execution_status","value":"success","timestamp":"2026-09-17T22:04:23.076575800Z"} belief=status(security,success)
-Sept 18, 2026 8:04:23 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"security","property":"duration","value":42,"timestamp":"2026-09-17T22:04:23.076575800Z"} belief=duration(security,42)
-Sept 18, 2026 8:04:24 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:38 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"security","property":"execution_status","value":"success","timestamp":"2026-09-17T22:55:37.383778700Z"} belief=status(security,success)
+Sept 18, 2026 8:55:38 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"security","property":"duration","value":42,"timestamp":"2026-09-17T22:55:37.383778700Z"} belief=duration(security,42)
+Sept 18, 2026 8:55:38 AM jason.stdlib.println execute
 INFO: security completed successfully.
-Sept 18, 2026 8:04:24 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:38 AM jason.stdlib.println execute
 INFO: Running entity: staging.
-Sept 18, 2026 8:04:24 AM harness.ObservationEnvironment executeAction
+Sept 18, 2026 8:55:38 AM harness.ObservationEnvironment executeAction
 INFO: action agent=bdi_agent run_job entity=staging
-Sept 18, 2026 8:04:24 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"staging","property":"execution_status","value":"success","timestamp":"2026-09-17T22:04:24.306083100Z"} belief=status(staging,success)
-Sept 18, 2026 8:04:24 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"staging","property":"duration","value":42,"timestamp":"2026-09-17T22:04:24.306083100Z"} belief=duration(staging,42)
-Sept 18, 2026 8:04:25 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:39 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"staging","property":"execution_status","value":"success","timestamp":"2026-09-17T22:55:38.592666200Z"} belief=status(staging,success)
+Sept 18, 2026 8:55:39 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"staging","property":"duration","value":42,"timestamp":"2026-09-17T22:55:38.592666200Z"} belief=duration(staging,42)
+Sept 18, 2026 8:55:39 AM jason.stdlib.println execute
 INFO: staging completed successfully.
-Sept 18, 2026 8:04:25 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:39 AM jason.stdlib.println execute
 INFO: Running entity: production.
-Sept 18, 2026 8:04:25 AM harness.ObservationEnvironment executeAction
+Sept 18, 2026 8:55:39 AM harness.ObservationEnvironment executeAction
 INFO: action agent=bdi_agent run_job entity=production
-Sept 18, 2026 8:04:25 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"production","property":"execution_status","value":"failure","timestamp":"2026-09-17T22:04:25.076127200Z"} belief=status(production,fail)
-Sept 18, 2026 8:04:25 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"production","property":"duration","value":42,"timestamp":"2026-09-17T22:04:25.076127200Z"} belief=duration(production,42)
-Sept 18, 2026 8:04:26 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:40 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"production","property":"execution_status","value":"failure","timestamp":"2026-09-17T22:55:39.360380700Z"} belief=status(production,fail)
+Sept 18, 2026 8:55:40 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"production","property":"duration","value":42,"timestamp":"2026-09-17T22:55:39.360380700Z"} belief=duration(production,42)
+Sept 18, 2026 8:55:40 AM jason.stdlib.println execute
 INFO: Failure observation accepted: production attempt 5.
-Sept 18, 2026 8:04:26 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:40 AM jason.stdlib.println execute
 INFO: production failed; retrying within configured retry budget.
-Sept 18, 2026 8:04:26 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:40 AM jason.stdlib.println execute
 INFO: Running entity: production.
-Sept 18, 2026 8:04:26 AM harness.ObservationEnvironment executeAction
+Sept 18, 2026 8:55:40 AM harness.ObservationEnvironment executeAction
 INFO: action agent=bdi_agent run_job entity=production
-Sept 18, 2026 8:04:26 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"production","property":"execution_status","value":"failure","timestamp":"2026-09-17T22:04:26.310887900Z"} belief=status(production,fail)
-Sept 18, 2026 8:04:26 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"production","property":"duration","value":42,"timestamp":"2026-09-17T22:04:26.310887900Z"} belief=duration(production,42)
-Sept 18, 2026 8:04:27 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:41 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"production","property":"execution_status","value":"failure","timestamp":"2026-09-17T22:55:40.570719900Z"} belief=status(production,fail)
+Sept 18, 2026 8:55:41 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"production","property":"duration","value":42,"timestamp":"2026-09-17T22:55:40.570719900Z"} belief=duration(production,42)
+Sept 18, 2026 8:55:41 AM jason.stdlib.println execute
 INFO: Failure observation accepted: production attempt 6.
-Sept 18, 2026 8:04:27 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:41 AM jason.stdlib.println execute
 INFO: production failed; recovery = rollback_production.
-Sept 18, 2026 8:04:27 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:41 AM jason.stdlib.println execute
 INFO: Running recovery entity: rollback_production for production.
-Sept 18, 2026 8:04:27 AM harness.ObservationEnvironment executeAction
+Sept 18, 2026 8:55:41 AM harness.ObservationEnvironment executeAction
 INFO: action agent=bdi_agent run_job entity=rollback_production
-Sept 18, 2026 8:04:27 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"rollback_production","property":"execution_status","value":"failure","timestamp":"2026-09-17T22:04:27.079670700Z"} belief=status(rollback_production,fail)
-Sept 18, 2026 8:04:27 AM harness.ObservationEnvironment publishObservations
-INFO: observation={"entity":"rollback_production","property":"duration","value":42,"timestamp":"2026-09-17T22:04:27.079670700Z"} belief=duration(rollback_production,42)
-Sept 18, 2026 8:04:28 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:42 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"rollback_production","property":"execution_status","value":"failure","timestamp":"2026-09-17T22:55:41.332526900Z"} belief=status(rollback_production,fail)
+Sept 18, 2026 8:55:42 AM harness.ObservationEnvironment publishObservations
+INFO: observation={"entity":"rollback_production","property":"duration","value":42,"timestamp":"2026-09-17T22:55:41.332526900Z"} belief=duration(rollback_production,42)
+Sept 18, 2026 8:55:42 AM jason.stdlib.println execute
 INFO: Failure observation accepted: rollback_production attempt 7.
-Sept 18, 2026 8:04:28 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:42 AM jason.stdlib.println execute
 INFO: Recovery failed: rollback_production.
-Sept 18, 2026 8:04:28 AM jason.stdlib.println execute
+Sept 18, 2026 8:55:42 AM jason.stdlib.println execute
 INFO: Master goal not achieved.
-Sept 18, 2026 8:04:28 AM harness.ScenarioEnvironment stop
+Sept 18, 2026 8:55:42 AM harness.ScenarioEnvironment stop
 INFO: scenario=scenario6 run_job_calls=[build, test, security, staging, production, production, rollback_production]
-Sept 18, 2026 8:04:28 AM harness.ScenarioEnvironment stop
-INFO: final_beliefs={test|duration=duration(test,42), staging|execution_status=status(staging,success), rollback_production|duration=duration(rollback_production,42), build|execution_status=status(build,success), security|duration=duration(security,42), build|duration=duration(build,42), test|execution_status=status(test,success), staging|duration=duration(staging,42), security|execution_status=status(security,success), production|duration=duration(production,42), rollback_production|execution_status=status(rollback_production,fail), production|execution_status=status(production,fail)}
-Sept 18, 2026 8:04:28 AM harness.ObservationEnvironment stop
-INFO: Observation environment stopped at 2026-09-17T22:04:28.754718700Z
+Sept 18, 2026 8:55:42 AM harness.ScenarioEnvironment stop
+INFO: final_beliefs={staging|duration=duration(staging,42), test|execution_status=status(test,success), build|duration=duration(build,42), security|duration=duration(security,42), build|execution_status=status(build,success), rollback_production|duration=duration(rollback_production,42), staging|execution_status=status(staging,success), test|duration=duration(test,42), production|execution_status=status(production,fail), rollback_production|execution_status=status(rollback_production,fail), production|duration=duration(production,42), security|execution_status=status(security,success)}
+Sept 18, 2026 8:55:42 AM harness.ObservationEnvironment stop
+INFO: Observation environment stopped at 2026-09-17T22:55:42.989783700Z

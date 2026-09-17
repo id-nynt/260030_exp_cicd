@@ -108,6 +108,9 @@ docker compose down
 
 ## Research demonstration
 
+Follow the literal experiment procedure in
+[`docs/EXPERIMENT_GUIDE.md`](docs/EXPERIMENT_GUIDE.md).
+
 The complete demonstration procedure is documented in
 [`docs/FINAL_DEMO_GUIDE.md`](docs/FINAL_DEMO_GUIDE.md). The required external
 machine and GitHub setup is documented in

@@ -44,7 +44,11 @@ $telemetryArgs = @('-NoExit','-ExecutionPolicy','Bypass','-File',$telemetryScrip
 Start-Process powershell.exe -ArgumentList $telemetryArgs
 $bdiArgs = @('-NoExit','-ExecutionPolicy','Bypass','-File',$bdiScript,'-LogFile',$logFile)
 Start-Process powershell.exe -ArgumentList $bdiArgs
-Write-Host '[4/4] Starting Java/Jason controller in this window...' -ForegroundColor Yellow
+Write-Host '[4/4] Opening the BDI MAS console window...' -ForegroundColor Yellow
 Write-Host "BDI log: $logFile"
-& powershell -ExecutionPolicy Bypass -File (Join-Path $javaRoot 'run_healthy_demo.ps1')
-if ($LASTEXITCODE -ne 0) { throw 'Real BDI controller failed.' }
+$controllerScript = Join-Path $root 'tools\run_bdi_controller.ps1'
+Start-Process powershell.exe -ArgumentList @('-NoExit','-ExecutionPolicy','Bypass','-File',$controllerScript) -WindowStyle Normal
+Write-Host 'Three windows are now expected:' -ForegroundColor Green
+Write-Host '  1. TELEMETRY MONITOR'
+Write-Host '  2. BDI DECISION MONITOR'
+Write-Host '  3. BDI MAS CONSOLE'
